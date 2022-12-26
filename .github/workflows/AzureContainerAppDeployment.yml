@@ -1,13 +1,13 @@
 name: Deploy Container Image to Azure App Service
 
 # Only trigger, when the build workflow succeeded
-# on:
-#   workflow_run:
-#     workflows: ["Build Linux Container Image and Push to ACR"]
-#     types:
-#       - completed
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build docker container Image and Push to ACR"]
+    types:
+      - completed
+# on:
+#   workflow_dispatch:
 
 permissions:
       id-token: write
@@ -43,7 +43,7 @@ jobs:
       
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: 'webappdevopsforu2612222'
+        app-name: 'webappdevopsforu271222'
         images: 'devopsforu3013.azurecr.io/myapp:${{ github.sha }}'
     
     - name: Azure logout
