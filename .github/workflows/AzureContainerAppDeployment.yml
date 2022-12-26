@@ -32,7 +32,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build . -t devopsforu3013.azurecr.io/myapp:${{ github.sha }}
+        docker build . -t devopsforu3013/myapp:${{ github.sha }}
         docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}     
       
     - uses: azure/webapps-deploy@v2
