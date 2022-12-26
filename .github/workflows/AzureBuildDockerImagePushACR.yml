@@ -2,11 +2,9 @@ name: Build docker container Image and Push to ACR
 
 
 on:
-  push:
-     branches:
-      - master
-      - feature
-      - develop
+  pull_request:
+    branches:    
+      - main
 
 # on:
 #    workflow_dispatch:
