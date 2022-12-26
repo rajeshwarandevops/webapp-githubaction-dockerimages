@@ -37,7 +37,7 @@ jobs:
       
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: 'devopsforuwebapp261222'
+        app-name: 'webappdevopsforu2612222'
         images: 'devopsforu3013.azurecr.io/myapp:${{ github.sha }}'
     
     - name: Azure logout
