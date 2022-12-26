@@ -1,5 +1,11 @@
 name: Deploy Container Image to Azure App Service
 
+# Only trigger, when the build workflow succeeded
+# on:
+#   workflow_run:
+#     workflows: ["Build Linux Container Image and Push to ACR"]
+#     types:
+#       - completed
 on:
   workflow_dispatch:
 
