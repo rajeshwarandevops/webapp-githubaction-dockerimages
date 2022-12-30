@@ -1,25 +1,23 @@
 name: Build docker container Image and Push to ACR
 
-
 on:
-  push:
-    branches:
-    - master
-  pull_request:
-    branches:
-    - master
+  workflow_run:
+    workflows: ["Build docker container Image and Push to ACR"]
+    types:
+      - completed
+
+# on: 
+# push:
+#     branches:
+#     - master
+#     pull_request:
+#      branches:
+#      - master
+
 
 permissions:
       id-token: write
       contents: read
-
-# on:
-#    workflow_dispatch:
-
-# on:
-#   push:
-#     branches:
-#       - main
 
 
 jobs:
@@ -29,6 +27,8 @@ jobs:
       run:
         shell: bash
         working-directory: dotnet
+
+
     steps:
     - name: repo Checkout
       uses: actions/checkout@v2
@@ -38,13 +38,13 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    - name: Azure CLI script file
-      uses: azure/CLI@v1
-      with:
-        azcliversion: 2.30.0
-        inlineScript: |
-          chmod +x $GITHUB_WORKSPACE/rg_acr.sh
-          $GITHUB_WORKSPACE/rg_acr.sh
+    # - name: Azure CLI script file
+    #   uses: azure/CLI@v1
+    #   with:
+    #     azcliversion: 2.30.0
+    #     inlineScript: |
+    #       chmod +x $GITHUB_WORKSPACE/rg_acr.sh
+    #       $GITHUB_WORKSPACE/rg_acr.sh
 
 
     - name: azure ACR login
@@ -55,4 +55,14 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
         docker build . -t devopsforu3013.azurecr.io/myapp:${{ github.sha }}
+        docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
+    - name: Web app deployment
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'webappdevopsforu271222'
+        images: 'devopsforu3013.azurecr.io/myapp:${{ github.sha }}'
+
+    - name: Azure logout
+      run: |
+        az logout
         docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
