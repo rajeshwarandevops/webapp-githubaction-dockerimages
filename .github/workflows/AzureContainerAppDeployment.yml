@@ -1,51 +1,58 @@
-name: Deploy Container Image to Azure App Service
+name: Build docker container Image and Push to ACR
 
-# Only trigger, when the build workflow succeeded
+
 on:
-  workflow_run:
-    workflows: ["Build docker container Image and Push to ACR"]
-    types:
-      - completed
-# on:
-#   workflow_dispatch:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 
 permissions:
       id-token: write
       contents: read
 
+# on:
+#    workflow_dispatch:
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
         working-directory: dotnet
     steps:
-    # checkout the repo
-    - name: 'Checkout GitHub Action' 
-      uses: actions/checkout@main
-    
-    - name: 'Login via Azure CLI'
+    - name: repo Checkout
+      uses: actions/checkout@v2
+    - name: Azure login
       uses: azure/login@v1
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    
-    - uses: azure/docker-login@v1
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.30.0
+        inlineScript: |
+          chmod +x $GITHUB_WORKSPACE/rg_acr.sh
+          $GITHUB_WORKSPACE/rg_acr.sh
+
+
+    - name: azure ACR login
+      uses: azure/docker-login@v1
       with:
         login-server: devopsforu3013.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
         docker build . -t devopsforu3013.azurecr.io/myapp:${{ github.sha }}
-        docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}     
-      
-    - uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'webappdevopsforu271222'
-        images: 'devopsforu3013.azurecr.io/myapp:${{ github.sha }}'
-    
-    - name: Azure logout
-      run: |
-        az logout
+        docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
