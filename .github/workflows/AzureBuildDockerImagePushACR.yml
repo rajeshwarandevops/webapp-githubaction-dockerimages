@@ -1,19 +1,19 @@
 name: Build docker container Image and Push to ACR
 
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 
 
 permissions:
       id-token: write
       contents: read
 
-# on:
-#    workflow_dispatch:
+on:
+   workflow_dispatch:
 
 # on:
 #   push:
@@ -55,3 +55,15 @@ jobs:
     - run: |
         docker build . -t devopsforu3013.azurecr.io/myapp:${{ github.sha }}
         docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
+        
+        # - name: Web app deployment
+    #   uses: azure/webapps-deploy@v2
+    #   with:
+    #     app-name: 'webappdevopsforu271222'
+    #     images: 'devopsforu3013.azurecr.io/myapp:${{ github.sha }}'
+
+    # - name: Azure logout
+    #   run: |
+    #     az logout
+    #     docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
+
