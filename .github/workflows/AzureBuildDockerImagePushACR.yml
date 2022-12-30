@@ -56,14 +56,15 @@ jobs:
         docker build . -t devopsforu3013.azurecr.io/myapp:${{ github.sha }}
         docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
         
-        # - name: Web app deployment
-    #   uses: azure/webapps-deploy@v2
-    #   with:
-    #     app-name: 'webappdevopsforu271222'
-    #     images: 'devopsforu3013.azurecr.io/myapp:${{ github.sha }}'
+#     - name: Web app deployment
+#       uses: azure/webapps-deploy@v2
+#       with:
+#         app-name: 'webappdevopsforu271222'
+#         images: 'devopsforu3013.azurecr.io/myapp:${{ github.sha }}'
 
-    # - name: Azure logout
-    #   run: |
-    #     az logout
-    #     docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
+#     - name: Azure logout
+#       run: |
+#         az logout
+#         docker push devopsforu3013.azurecr.io/myapp:${{ github.sha }}
+
 
