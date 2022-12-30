@@ -4,7 +4,7 @@ ACR_NAME="devopsforu3013"
 RES_GROUP="rg-devopsforu3013"
 LOC="eastus"
 
-# Create Resource Group
+# Create Resource Group #
 az group create -n $RES_GROUP -l $LOC
 
 # Create ACR 
